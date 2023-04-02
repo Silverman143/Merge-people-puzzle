@@ -13,39 +13,37 @@ public static class GlobalEvents
     public static UnityEvent<Vector3> OnInputPositionChanged = new UnityEvent<Vector3>();
     public static UnityEvent OnInputPositionEnded = new UnityEvent();
 
+    // Battle
 
-    public static void HeroSelectedInvoke(MergeHeroController hero)
-    {
-        OnHeroSelected?.Invoke(hero);
-    }
+    public static UnityEvent<Vector3> OnHeroHitEnemy = new UnityEvent<Vector3>();
+    public static UnityEvent OnEnemyDead = new UnityEvent();
+    public static UnityEvent OnGameStart = new UnityEvent();
+    public static UnityEvent OnGamePaused = new UnityEvent();
+    public static UnityEvent OnGameContinue = new UnityEvent();
 
-    public static void HeroDestroyInvoke(Vector3 pos, HeroType type)
-    {
-        OnHeroDestroy.Invoke(pos, type);
-    }
+    public static void HeroSelectedInvoke(MergeHeroController hero) => OnHeroSelected?.Invoke(hero);
 
-    public static void ChangedHeroesAmountInvoke(int amount, HeroType type)
-    {
-        OnChangedHeroesAmount.Invoke(amount, type);
-    }
+    public static void HeroDestroyInvoke(Vector3 pos, HeroType type) => OnHeroDestroy.Invoke(pos, type);
 
-    public static void ChangeCoinsAmountInvoke()
-    {
-        OnChangeCoinsAmount.Invoke();
-    }
+    public static void ChangedHeroesAmountInvoke(int amount, HeroType type) => OnChangedHeroesAmount.Invoke(amount, type);
 
-    public static void FillInButtonInvoke()
-    {
-        OnFillInButton.Invoke();
-    }
+    public static void ChangeCoinsAmountInvoke() => OnChangeCoinsAmount.Invoke();
 
-    public static void InputPositionChangedInvoke(Vector3 pos)
-    {
-        OnInputPositionChanged.Invoke(pos);
-    }
+    public static void FillInButtonInvoke() => OnFillInButton.Invoke();
 
-    public static void InputPositionEndedInvoke()
-    {
-        OnInputPositionEnded.Invoke();
-    }
+    public static void InputPositionChangedInvoke(Vector3 pos) => OnInputPositionChanged.Invoke(pos);
+
+    public static void InputPositionEndedInvoke() => OnInputPositionEnded.Invoke();
+
+    // Battle
+
+    public static void HeroHitEnemyInvoke(Vector3 pos) => OnHeroHitEnemy.Invoke(pos);
+
+    public static void EnemyDeadInvoke() => OnEnemyDead.Invoke();
+
+    public static void GameStartInvoke() => OnGameStart.Invoke();
+
+    public static void GamePouseInvoke() => OnGamePaused.Invoke();
+
+    public static void GameContinueInvoke() => OnGameContinue.Invoke();
 }

@@ -5,20 +5,40 @@ using System.Collections.Generic;
 using UnityEngine;
 using static UnityEditor.Progress;
 
+[System.Serializable]
+struct GridLevel
+{
+    public int LevelNumber;
+    public Vector3 Pos;
+    public int xSize;
+    public int zSize;
+}
+
 public class MergeLevelGenerator : MonoBehaviour
 {
     [SerializeField] private int _gridHeight;
     [SerializeField] private int _gridWidth;
+    [SerializeField] private GridLevel[] _gridLevels;
 
     private int _herosAmount;
 
     [SerializeField] private GameObject _heroPrefab;
 
+    public static MergeLevelGenerator Instance;
+
+    private void Awake()
+    {
+        if (Instance != this)
+        {
+            Instance = this;
+        }
+    }
+
     private void Start()
     {
         _herosAmount = Enum.GetValues(typeof(HeroType)).Length;
 
-        CreateRandomLevel();
+        //CreateRandomLevel();
     }
 
     private void OnEnable()
@@ -31,13 +51,41 @@ public class MergeLevelGenerator : MonoBehaviour
         GlobalEvents.OnFillInButton.RemoveListener(FillInBlanks);
     }
 
-    public void CreateRandomLevel()
+    public void CreateRandomLevel(int heigh, int width)
     {
-        GridSystem.Instance.GenerateGrid(_gridHeight, _gridWidth);
+        GridSystem.Instance.GenerateGrid(heigh, width);
         SetHeros();
     }
 
-    private void SetHeros()
+    public void LoadLevel()
+    {
+        int heigh;
+        int width;
+        DataHandler.Instance.GetCurrentMergeLevelGridSize(out width, out heigh);
+
+        if (DataHandler.Instance.IsNewMergeLevel())
+        {
+            CreateRandomLevel(heigh, width);
+        }
+        else
+        {
+            HeroesOnGridData[] heroes = DataHandler.Instance.SavedHeroesOnGrid;
+
+            GridSystem.Instance.GenerateGrid(heigh, width);
+            AppendHeroes(heroes);
+        }
+    }
+
+    private void AppendHeroes(HeroesOnGridData[] heroes)                                                    // Add saved heroes
+    {
+        foreach(HeroesOnGridData hero in heroes)
+        {
+            GridItem gridItem = GridSystem.Instance.GetByCoordinates(hero.coordinates[0], hero.coordinates[1]);
+            CreateSingleHero(hero.Type, gridItem);
+        }
+    }
+
+    private void SetHeros()                                                                                 //Generate new random heroes
     {
         int herosAmount = GridSystem.Instance.GetGridLenght() / 2;
         Debug.Log(herosAmount);

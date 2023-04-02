@@ -208,7 +208,10 @@ public class GridSystem : MonoBehaviour
         return lenght;
     }
 
-
+    public GridItem GetByCoordinates(int x, int z)
+    {
+        return _items[x][z];
+    }
 
     public void ReleaseGridItem(GridItem itemChange)
     {
